@@ -1,11 +1,9 @@
-const part1 = (input: string) => {
-  const lines = input.split('\n');
-
+const getBoards = (arr: Array<string>) => {
   // Build an array of 2d arrays that represent each board.
   let boards = [];
   let board = [];
-  for (let i = 2; i < lines.length; i++) {
-    const line = lines[i];
+  for (let i = 2; i < arr.length; i++) {
+    const line = arr[i];
 
     if (!line) {
       boards.push(board);
@@ -14,10 +12,31 @@ const part1 = (input: string) => {
     }
 
     board.push(line.split(' ').filter(Boolean).map(Number));
-    if (i === lines.length - 1) {
+    if (i === arr.length - 1) {
       boards.push(board);
     }
   }
+  return boards;
+};
+
+const hasWon = (board: Array<Array<number>>, row: number, col: number) => {
+  return (
+    board[row].every((n) => n === -1) || board.every((arr) => arr[col] === -1)
+  );
+};
+
+const sumUnmarked = (board: Array<Array<number>>) => {
+  return board.reduce(
+    (acc, row) =>
+      acc + row.filter((n) => n > -1).reduce((acc, cur) => acc + cur, 0),
+    0
+  );
+};
+
+const part1 = (input: string) => {
+  const lines = input.split('\n');
+
+  const boards = getBoards(lines);
 
   // Iterate over the sequence of numbers that are called,
   // and determine after each one whether there is a winner.
@@ -31,16 +50,8 @@ const part1 = (input: string) => {
             board[i][j] = -1;
 
             // Check if this board has won.
-            if (
-              board[i].every((n) => n === -1) ||
-              board.every((arr) => arr[j] === -1)
-            ) {
-              let sum = 0;
-              for (let k = 0; k < board.length; k++) {
-                sum += board[k]
-                  .filter((n) => n > -1)
-                  .reduce((acc, cur) => acc + cur, 0);
-              }
+            if (hasWon(board, i, j)) {
+              const sum = sumUnmarked(board);
               return sum * num;
             }
           }
@@ -53,23 +64,7 @@ const part1 = (input: string) => {
 const part2 = (input: string) => {
   const lines = input.split('\n');
 
-  // Build an array of 2d arrays that represent each board.
-  let boards = [];
-  let board = [];
-  for (let i = 2; i < lines.length; i++) {
-    const line = lines[i];
-
-    if (!line) {
-      boards.push(board);
-      board = [];
-      continue;
-    }
-
-    board.push(line.split(' ').filter(Boolean).map(Number));
-    if (i === lines.length - 1) {
-      boards.push(board);
-    }
-  }
+  const boards = getBoards(lines);
 
   // Iterate over the sequence of numbers that are called,
   // and determine after each one whether there is a winner.
@@ -87,17 +82,9 @@ const part2 = (input: string) => {
             board[i][j] = -1;
 
             // Check if this board has won.
-            if (
-              board[i].every((n) => n === -1) ||
-              board.every((arr) => arr[j] === -1)
-            ) {
+            if (hasWon(board, i, j)) {
               if (boards.length === 1) {
-                let sum = 0;
-                for (let k = 0; k < board.length; k++) {
-                  sum += board[k]
-                    .filter((n) => n > -1)
-                    .reduce((acc, cur) => acc + cur, 0);
-                }
+                const sum = sumUnmarked(board);
                 return sum * num;
               }
 
