@@ -5,7 +5,8 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true
+    "strict": true,
+    "downlevelIteration": true
   },
   "ts-node": {
     "transpileOnly": true,
