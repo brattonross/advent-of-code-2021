@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/brattonross/advent-of-code-2021#readme",
   "scripts": {
+    "dev": "jest --watch",
     "test": "jest"
   },
   "engines": {
